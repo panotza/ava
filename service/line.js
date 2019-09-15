@@ -1,15 +1,22 @@
 const line = require('@line/bot-sdk')
 
-module.exports = {
-	init: (accessToken, secret) => {
-		const config = {
-			channelAccessToken: accessToken,
-			channelSecret: secret
-		};
-		
-		const client = new line.Client(config)
-		line.middleware(config)
+function init () {
+	const config = {
+		channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+		channelSecret: process.env.CHANNEL_SECRET
+	};
 	
-		return client
+	const client = new line.Client(config)
+	line.middleware(config)
+
+	return {
+		replyText: async (event, text) => {
+			return client.replyMessage(event.replyToken, {
+				type: 'text',
+				text
+			})
+		}
 	}
 }
+
+module.exports = init()

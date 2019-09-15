@@ -4,5 +4,11 @@
 		"CHANNEL_ACCESS_TOKEN": "@channel_access_token",
 		"CHANNEL_SECRET": "@channel_secret",
 		"DB_URL": "@db_url"
-	}
+	},
+	"builds": [
+		{ "src": "api/*.js", "use": "@now/node" }
+	],
+	"routes": [
+        { "src": "/api/webhook", "dest": "/api/webhook.js" }
+    ]
 }

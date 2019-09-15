@@ -19,6 +19,8 @@
   "homepage": "https://github.com/panotza/ava#readme",
   "dependencies": {
     "@line/bot-sdk": "^6.8.2",
-    "mongodb": "^3.3.2"
+    "chrome-aws-lambda": "^1.20.0",
+    "mongodb": "^3.3.2",
+    "puppeteer-core": "^1.20.0"
   }
 }
