@@ -2,6 +2,7 @@
 	"env": {
 		"NODE_ENV": "production",
 		"CHANNEL_ACCESS_TOKEN": "@channel_access_token",
-		"CHANNEL_SECRET": "@channel_secret"
+		"CHANNEL_SECRET": "@channel_secret",
+		"DB_URL": "@db_url"
 	}
 }

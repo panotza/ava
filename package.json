@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/panotza/ava#readme",
   "dependencies": {
-    "@line/bot-sdk": "^6.8.2"
+    "@line/bot-sdk": "^6.8.2",
+    "mongodb": "^3.3.2"
   }
 }
