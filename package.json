@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "now -e NODE_ENV=production -e CHANNEL_ACCESS_TOKEN=@channel_access_token -e CHANNEL_SECRET=@channel_secret"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/panotza/ava/issues"
   },
-  "homepage": "https://github.com/panotza/ava#readme"
+  "homepage": "https://github.com/panotza/ava#readme",
+  "dependencies": {
+    "@line/bot-sdk": "^6.8.2"
+  }
 }
