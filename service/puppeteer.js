@@ -9,7 +9,7 @@ module.exports = {
 		})
 		const page = await browser.newPage()
 		await page.goto(`http://track.thailandpost.co.th/tracking/default.aspx?lang=th`, { waitUntil: 'networkidle0' })
-		await Promise.all([page.waitForSelector('#TextBarcode', { visible: true }), page.waitForSelector('#TextBarcode', { visible: true })])
+		await Promise.all([page.waitForSelector('#TextBarcode', { visible: true }), page.waitForSelector('.bgSlider', { visible: true })])
 
 		await page.type('#TextBarcode', trackingNumber)
 		const e = await page.$('.bgSlider')
