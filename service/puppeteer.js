@@ -8,7 +8,8 @@ module.exports = {
 			headless: chrome.headless,
 		})
 		const page = await browser.newPage()
-		await page.goto(`http://track.thailandpost.co.th/tracking/default.aspx?lang=th`, { waitUntil: 'networkidle2' })
+		await page.goto(`http://track.thailandpost.co.th/tracking/default.aspx?lang=th`, { waitUntil: 'networkidle0' })
+		await Promise.all([page.waitForSelector('#TextBarcode', { visible: true }), page.waitForSelector('#TextBarcode', { visible: true })])
 
 		await page.type('#TextBarcode', trackingNumber)
 		const e = await page.$('.bgSlider')
@@ -21,10 +22,10 @@ module.exports = {
 		await page.waitForNavigation()
 		const data = await page.evaluate(() => {
 			const tds = Array.from(document.querySelectorAll("table:nth-child(3)"))
-				return tds.map(td => {
-					var txt = td.innerText.replace(/<a [^>]+>[^<]*<\/a>/g, '').trim()
-					return txt
-				})
+			return tds.map(td => {
+				var txt = td.innerText.replace(/<a [^>]+>[^<]*<\/a>/g, '').trim()
+				return txt
+			})
 		})
 	
 		data[1] = data[1].replace(/\t/g, ' ')
@@ -38,6 +39,7 @@ module.exports = {
 			status.push(tracking[i] + tracking[i + 1])
 		}
 
+		await page.close()
 		await browser.close()
 
 		return status
