@@ -1,33 +1,43 @@
 const line = require('../service/line')
 const insertLog = require('../service/db')
-const puppeteer = require('../service/puppeteer')
+const thaipost = require('../service/thaipost')
 
 async function handleEvent(event) {
 	await insertLog(event)
 
 	const { type, message } = event
-
 	if (type !== 'message' || message.type !== 'text') {
-		return Promise.resolve(null)
+		return
 	}
-
 	if (!message.text) {
-		return Promise.resolve(null)
+		return
 	}
 
-	const args = message.text.split(' ')
-	switch (args[0]) {
+	const [cmd, ...args] = message.text.split(' ')
+	switch (cmd) {
 		case 'ems':
 			try {
-				const status = await puppeteer.resolveEms(args[1])
-				return line.replyText(event, `ems number: ${args[1]}\n${status.join('\n')}`)
+				const items = await thaipost.getItems(args)
+				let msg = ''
+				Object.entries(items).forEach(([code, trackingStatus]) => {
+					msg += `✨ EMS number: ${code}\n`
+					if (trackingStatus.length > 0) {
+						trackingStatus.forEach((status) => {
+							const { status_date, status_description, location, postcode } = status
+							msg += `${thaipost.formatTimestamp(status_date)} ${status_description} ${location} ${postcode}\n`
+						})
+					} else {
+						msg += 'ไม่มีข้อมูลสถานะ ณ ตอนนี้\n'
+					}
+				})
+				return line.replyText(event, msg.trim())
 			} catch (err) {
 				await insertLog({ type: 'error', message: err.message })
-				return line.replyText(event, `error checking ems: ${err.message}`)
+				return line.replyText(event, `error checking ems ❗️`)
 			}
 	}
 
-	return line.replyText(event, event.message.text)
+	return line.replyText(event, `หนูไม่เข้าใจคำว่า "${cmd}" ค่ะ 😰`)
 }
 
 module.exports = async (req, res) => {

@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "now -e NODE_ENV=production -e CHANNEL_ACCESS_TOKEN=@channel_access_token -e CHANNEL_SECRET=@channel_secret"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/panotza/ava.git"
@@ -19,8 +16,7 @@
   "homepage": "https://github.com/panotza/ava#readme",
   "dependencies": {
     "@line/bot-sdk": "^6.8.2",
-    "chrome-aws-lambda": "^1.20.0",
-    "mongodb": "^3.3.2",
-    "puppeteer-core": "^1.20.0"
+    "axios": "^0.19.0",
+    "mongodb": "^3.3.2"
   }
 }

@@ -3,12 +3,7 @@
 		"NODE_ENV": "production",
 		"CHANNEL_ACCESS_TOKEN": "@channel_access_token",
 		"CHANNEL_SECRET": "@channel_secret",
-		"DB_URL": "@db_url"
-	},
-	"builds": [
-		{ "src": "api/*.js", "use": "@now/node" }
-	],
-	"routes": [
-        { "src": "/api/webhook", "dest": "/api/webhook.js" }
-    ]
+		"DB_URL": "@db_url",
+		"THAIPOST_API_TOKEN": "@thaipost_api_token"
+	}
 }
