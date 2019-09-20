@@ -37,7 +37,7 @@ async function handleEvent(event) {
 			}
 	}
 
-	return line.replyText(event, `หนูไม่เข้าใจคำว่า "${cmd}" ค่ะ 😰`)
+	return line.replyText(event, `หนูไม่เข้าใจคำว่า "${message.text}" ค่ะ 😰`)
 }
 
 module.exports = async (req, res) => {
