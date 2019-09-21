@@ -13,12 +13,12 @@ const users = {
 	async create (userId) {
 		return db.collection('users').doc(userId).set({ createdAt: moment().format() })
 	},
-	async getWalletAmount (userId) {
+	async getBalance (userId) {
 		const user = await db.collection('users').doc(userId).get()
 		if (!user.exists) {
 			throw 'user does not exist'
 		}
-		return user.data().walletAmount || 0
+		return user.data().balance || 0
 	}
 }
 
@@ -33,10 +33,10 @@ const wallet = {
 					throw 'user does not exist'
 				}
 
-				let walletAmount = user.data().walletAmount || 0
-				walletAmount += amount
+				let balance = user.data().balance || 0
+				balance += amount
 
-				tx.update(userRef, { walletAmount })
+				tx.update(userRef, { balance })
 				tx.create(transactionRef, {
 					amount,
 					remark,

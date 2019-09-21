@@ -1,10 +1,9 @@
-const moment = require('moment')
 const line = require('../service/line')
 const thaipost = require('../service/thaipost')
 const firestore = require('../service/firestore')
 
 async function handleEvent(event) {
-	firestore.logs.add(event)
+	await firestore.logs.add(event)
 
 	switch (event.type) {
 	case 'follow':
@@ -46,7 +45,7 @@ async function handleMessage(event) {
 				})
 				return line.replyText(event, msg.trim())
 			} catch (err) {
-				firestore.logs.add({
+				await firestore.logs.add({
 					type: 'error',
 					message: err.message
 				})
@@ -72,16 +71,16 @@ async function handleMessage(event) {
 
 				let msg = `💸 จ่ายเงิน ${amount.toLocaleString('en-US', { maximumFractionDigits: 2 })} บาท `
 				if (remark) {
-					msg += `*${remark}`
+					msg += `(${remark})`
 				}
 				msg = msg.trim()
 
-				const sum = await firestore.users.getWalletAmount(userId)
+				const sum = await firestore.users.getBalance(userId)
 				msg += `\nคงเหลือ ${sum.toLocaleString('en-US', { maximumFractionDigits: 2 })} บาท`
 
 				return line.replyText(event, msg)
 			} catch (err) {
-				firestore.logs.add({
+				await firestore.logs.add({
 					type: 'error',
 					message: err.message
 				})
@@ -107,16 +106,16 @@ async function handleMessage(event) {
 
 				let msg = `💵 รับเงิน ${amount.toLocaleString('en-US', { maximumFractionDigits: 2 })} บาท `
 				if (remark) {
-					msg += `*${remark}`
+					msg += `(${remark})`
 				}
 				msg = msg.trim()
 
-				const sum = await firestore.users.getWalletAmount(userId)
+				const sum = await firestore.users.getBalance(userId)
 				msg += `\nคงเหลือ ${sum.toLocaleString('en-US', { maximumFractionDigits: 2 })} บาท`
 
 				return line.replyText(event, msg.trim())
 			} catch (err) {
-				firestore.logs.add({
+				await firestore.logs.add({
 					type: 'error',
 					message: err.message
 				})
