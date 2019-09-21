@@ -3,7 +3,7 @@
 		"NODE_ENV": "production",
 		"CHANNEL_ACCESS_TOKEN": "@channel_access_token",
 		"CHANNEL_SECRET": "@channel_secret",
-		"DB_URL": "@db_url",
-		"THAIPOST_API_TOKEN": "@thaipost_api_token"
+		"THAIPOST_API_TOKEN": "@thaipost_api_token",
+		"FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account"
 	}
 }
