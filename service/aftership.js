@@ -35,7 +35,7 @@ async function create (trackingNumber) {
 		}
 		const { data: { data: { tracking } } } = await api.post('/trackings', body)
 		// newly created trackings need some time to process data so we wait
-		await sleep(5000)
+		await sleep(3000)
 		return { trackingId: tracking.id }
 	} catch (err) {
 		const { response } = err
