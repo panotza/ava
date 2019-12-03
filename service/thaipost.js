@@ -1,6 +1,8 @@
 const https = require('https')
 const axios = require('axios')
 
+const template = require('./template')
+
 const api = axios.create({
 	baseURL: 'https://trackapi.thailandpost.co.th/post/api/v1',
 	timeout: 5000,
@@ -11,20 +13,39 @@ const api = axios.create({
 })
 
 const getToken = async () => {
-	const { data } = await api.post('/authenticate/token', {}, {
+	const header = {
 		headers: {'Authorization': `Token ${process.env.THAIPOST_API_TOKEN}`}
-	})
+	}
+	const { data } = await api.post('/authenticate/token', {}, header)
 	return data.token
 }
 
-const getItems = async (barcodes) => {
+const getTracks = async (barcodes) => {
 	const token = await getToken()
-	const { data: { response } } = await api.post('/track', {
+	const header = {
+		headers: {'Authorization': `Token ${token}`}
+	}
+	const body = {
 		status: 'all',
 		language: 'TH',
 		barcode: barcodes
-	}, { headers: {'Authorization': `Token ${token}`} })
-	return response.items
+	}
+	const { data: { response } } = await api.post('/track', body, header)
+
+	const replies = []
+	Object.entries(response.items).forEach(([code, checkpoints]) => {
+		let text = checkpoints.map((cp) => {
+			const { status_date, status_description, location, postcode } = cp
+			return `${formatTimestamp(status_date)} ${status_description} ${location} ${postcode}`
+		}).join('\n')
+
+		if (!text) {
+			text = 'ไม่มีข้อมูลสถานะ ณ ตอนนี้'
+		}
+
+		replies.push(template.trackingReply(code, 'ไปรษณีย์ไทย', text))
+	})
+	return replies.join('\n\n')
 }
 
 const formatTimestamp = (ts) => {
@@ -34,6 +55,5 @@ const formatTimestamp = (ts) => {
 }
 
 module.exports = {
-	getItems,
-	formatTimestamp
+	getTracks
 }

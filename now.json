@@ -4,6 +4,7 @@
 		"CHANNEL_ACCESS_TOKEN": "@channel_access_token",
 		"CHANNEL_SECRET": "@channel_secret",
 		"THAIPOST_API_TOKEN": "@thaipost_api_token",
-		"FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account"
+		"FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
+		"AFTERSHIP_API_TOKEN": "@aftership_api_token"
 	}
 }

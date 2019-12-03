@@ -1,5 +1,6 @@
 const line = require('../service/line')
 const thaipost = require('../service/thaipost')
+const aftership = require('../service/aftership')
 const firestore = require('../service/firestore')
 
 async function handleEvent(event) {
@@ -30,26 +31,40 @@ async function handleMessage(event) {
 	switch (cmd) {
 		case 'ems':
 			try {
-				const items = await thaipost.getItems(args)
-				let msg = ''
-				Object.entries(items).forEach(([code, trackingStatus]) => {
-					msg += `✨ EMS number: ${code}\n`
-					if (trackingStatus.length > 0) {
-						trackingStatus.forEach((status) => {
-							const { status_date, status_description, location, postcode } = status
-							msg += `${thaipost.formatTimestamp(status_date)} ${status_description} ${location} ${postcode}\n`
-						})
-					} else {
-						msg += 'ไม่มีข้อมูลสถานะ ณ ตอนนี้\n'
-					}
-				})
-				return line.replyText(event, msg.trim())
+				const codes = args
+				const text = await thaipost.getTracks(codes)
+				return line.replyText(event, text)
 			} catch (err) {
 				await firestore.logs.add({
 					type: 'error',
 					message: err.message
 				})
 				return line.replyText(event, `error checking ems ❗️`)
+			}
+		case 'track':
+			try {
+				const codes = args
+				const tasks = codes.map(async (code) => {
+					const couriers = await aftership.detect(code)
+					if (couriers.length === 0) {
+						return `📦 Track number: ${code}\nไม่พบข้อมูลหมายเลขพัสดุ`
+					}
+
+					if (couriers.some((c) => c.slug === 'thailand-post')) {
+						return thaipost.getTracks(code)
+					}
+
+					return aftership.getTrack(code)
+				})
+				const replies = await Promise.all(tasks)
+				return line.replyText(event, replies.join('\n\n'))
+			} catch (err) {
+				console.log(err)
+				await firestore.logs.add({
+					type: 'error',
+					message: err.message
+				})
+				return line.replyText(event, `tracking error ❗️`)
 			}
 		case 'b':
 			try {
