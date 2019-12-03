@@ -24,12 +24,13 @@ async function detect (trackingNumber) {
 
 async function create (trackingNumber) {
 	try {
-		const { data: { data: { tracking } } } = await api.post('/trackings', {
+		const body = {
 			tracking: {
 				tracking_number: trackingNumber
 			}
-		})
-		return { trackingid: tracking.id }
+		}
+		const { data: { data: { tracking } } } = await api.post('/trackings', body)
+		return { trackingId: tracking.id }
 	} catch (err) {
 		const { response } = err
 		if (response.status === 400) {
@@ -39,7 +40,7 @@ async function create (trackingNumber) {
 			}
 			// cannot detect courier
 			if (response.data.meta.code === 4012) {
-				throw 'Cannot detect courier'
+				throw new Error('Cannot detect courier')
 			}
 		}
 		throw err
