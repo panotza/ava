@@ -22,6 +22,10 @@ async function detect (trackingNumber) {
 	return couriers
 }
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function create (trackingNumber) {
 	try {
 		const body = {
@@ -30,6 +34,8 @@ async function create (trackingNumber) {
 			}
 		}
 		const { data: { data: { tracking } } } = await api.post('/trackings', body)
+		// newly created trackings need some time to process data so we wait
+		await sleep(5000)
 		return { trackingId: tracking.id }
 	} catch (err) {
 		const { response } = err
